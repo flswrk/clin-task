@@ -86,6 +86,7 @@ function renderSection(title, subtitle, content, actionHtml = '') {
 function render() {
   cf = document.getElementById('cat-filter').value;
   sf = document.getElementById('status-filter').value;
+  sb = document.getElementById('sort-filter').value;
 
   const fil = applySort(applyFilters(tasks, cf, sf), sb);
   const active = fil.filter(t => t.status !== 'Done');
@@ -112,20 +113,12 @@ function render() {
   }
 
   document.getElementById('list-wrap').innerHTML = h;
-  setSortButtons();
-}
-
-function setSortButtons() {
-  ['score', 'name', 'due'].forEach(k => {
-    const el = document.getElementById('sb-' + k);
-    el.classList.toggle('is-active', k === sb);
-    el.setAttribute('aria-pressed', String(k === sb));
-  });
+  document.getElementById('sort-filter').value = sb;
 }
 
 function setSort(v) {
   sb = v;
-  setSortButtons();
+  document.getElementById('sort-filter').value = sb;
   render();
 }
 

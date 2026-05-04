@@ -326,6 +326,11 @@ button {
   gap: 11px;
 }
 
+.controls-grid-compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+}
+
 .controls-card .controls-grid {
   gap: 8px;
 }
@@ -380,36 +385,6 @@ button {
 .field-textarea {
   min-height: 110px;
   resize: vertical;
-}
-
-.sort-block {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-top: 8px;
-}
-
-.sort-wrap {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-}
-
-.sort-btn {
-  min-height: 40px;
-  padding: 8px 6px;
-  border-radius: 9px;
-  background: var(--surface-2);
-  border: 1.5px solid var(--border);
-  color: var(--text-soft);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.sort-btn.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
 }
 
 .task-sections {
@@ -838,7 +813,6 @@ button {
 .header-action:active,
 .cta-button:active,
 .modal-btn:active,
-.sort-btn:active,
 .task-toggle:active,
 .card-delete:active {
   transform: scale(0.97);
@@ -911,14 +885,13 @@ button {
     gap: 9px;
   }
 
+  .controls-grid-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .field-input {
     min-height: 44px;
     padding: 10px 12px;
-  }
-
-  .sort-btn {
-    min-height: 38px;
-    font-size: 12px;
   }
 
   .task-card {
@@ -975,7 +948,7 @@ button {
     padding: 24px 18px 18px;
   }
 
-  .controls-grid,
+  .controls-grid:not(.controls-grid-compact),
   .form-grid,
   .slider-grid {
     grid-template-columns: repeat(2, 1fr);

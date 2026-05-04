@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <div class="controls-grid">
+        <div class="controls-grid controls-grid-compact">
           <div class="field-group">
             <label class="field-label" for="cat-filter">Category</label>
             <select class="field-input field-select" id="cat-filter" onchange="render()">
@@ -78,14 +78,13 @@
               <option value="Done">Done</option>
             </select>
           </div>
-        </div>
-
-        <div class="sort-block">
-          <span class="field-label">Sort by</span>
-          <div class="sort-wrap" role="tablist" aria-label="Sort tasks">
-            <button class="sort-btn" id="sb-score" type="button" onclick="setSort('score')">Score</button>
-            <button class="sort-btn" id="sb-name" type="button" onclick="setSort('name')">A-Z</button>
-            <button class="sort-btn" id="sb-due" type="button" onclick="setSort('due')">Due</button>
+          <div class="field-group">
+            <label class="field-label" for="sort-filter">Sort by</label>
+            <select class="field-input field-select" id="sort-filter" onchange="setSort(this.value)">
+              <option value="score">Score</option>
+              <option value="name">A-Z</option>
+              <option value="due">Due</option>
+            </select>
           </div>
         </div>
       </section>
