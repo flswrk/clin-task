@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Flosswork">
+  <title>Flosswork</title>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- App Header -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="topbar-copy">
+          <p class="eyebrow">Task board</p>
+          <h1 class="topbar-brand">Flosswork</h1>
+        </div>
+        <button class="header-action" type="button" onclick="openModal(null)">New</button>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <!-- Summary -->
+      <section class="surface-card summary-card" aria-label="Overview">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Overview</p>
+            <h2 class="section-title">Today’s workload</h2>
+          </div>
+          <span class="summary-total" id="task-count"></span>
+        </div>
+        <div class="stats-grid" id="stats-row"></div>
+      </section>
+
+      <!-- Filters and sorting -->
+      <section class="surface-card controls-card" aria-label="Filters and sorting">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Organize</p>
+            <h2 class="section-title">Filter your tasks</h2>
+          </div>
+        </div>
+
+        <div class="controls-grid">
+          <div class="field-group">
+            <label class="field-label" for="cat-filter">Category</label>
+            <select class="field-input field-select" id="cat-filter" onchange="render()">
+              <option value="All">All</option>
+              <option value="Clinical">Clinical</option>
+              <option value="Finance">Finance</option>
+              <option value="Operations">Operations</option>
+              <option value="Growth">Growth</option>
+              <option value="Systems">Systems</option>
+              <option value="Compliance">Compliance</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="status-filter">Status</label>
+            <select class="field-input field-select" id="status-filter" onchange="render()">
+              <option value="Active">Active</option>
+              <option value="All">All</option>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sort-block">
+          <span class="field-label">Sort by</span>
+          <div class="sort-wrap" role="tablist" aria-label="Sort tasks">
+            <button class="sort-btn" id="sb-score" type="button" onclick="setSort('score')">Score</button>
+            <button class="sort-btn" id="sb-name" type="button" onclick="setSort('name')">A-Z</button>
+            <button class="sort-btn" id="sb-due" type="button" onclick="setSort('due')">Due</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Task sections -->
+      <section id="list-wrap" class="task-sections" aria-label="Task sections"></section>
+    </main>
+
+    <!-- Primary mobile action -->
+    <div class="bottom-cta">
+      <button class="cta-button" type="button" onclick="openModal(null)">Add Task</button>
+    </div>
+  </div>
+
+  <!-- Task Modal -->
+  <div id="modal-overlay" class="overlay" style="display:none" onclick="overlayClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="drag-handle"></div>
+
+      <div class="modal-header">
+        <div>
+          <p class="section-kicker">Task details</p>
+          <div class="modal-title" id="modal-title">New Task</div>
+        </div>
+      </div>
+
+      <div class="score-prev">
+        <div class="score-figure">
+          <div class="sp-num" id="sp-val" style="color:#0a84ff">60</div>
+          <div class="sp-sub">priority score</div>
+        </div>
+        <div class="score-meta">
+          <div class="sp-tier" id="sp-tier">Moderate Priority</div>
+          <div class="sp-track">
+            <div class="sp-fill" id="sp-bar" style="width:60%;background:#0a84ff"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="field-group">
+          <label class="field-label" for="f-title">Title *</label>
+          <input class="field-input" id="f-title" type="text" placeholder="Task title" autocomplete="off">
+        </div>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label" for="f-status">Status</label>
+            <select class="field-input field-select" id="f-status">
+              <option>Not Started</option>
+              <option>In Progress</option>
+              <option>On Hold</option>
+              <option>Done</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="f-cat">Category</label>
+            <select class="field-input field-select" id="f-cat">
+              <option>Clinical</option>
+              <option>Finance</option>
+              <option>Operations</option>
+              <option>Growth</option>
+              <option>Systems</option>
+              <option>Compliance</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="surface-subcard" aria-label="Priority factors">
+          <div class="section-head compact-head">
+            <div>
+              <p class="section-kicker">Priority</p>
+              <h3 class="section-title small-title">Score inputs</h3>
+            </div>
+          </div>
+
+          <div class="slider-grid">
+            <div class="field-group">
+              <label class="field-label">Impact <span id="lv-imp">3</span>/5</label>
+              <div class="sl-row">
+                <input type="range" min="1" max="5" step="1" value="3" id="f-imp" oninput="updateScorePreview()">
+                <span class="sl-val" id="sv-imp">3</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Urgency <span id="lv-urg">3</span>/5</label>
+              <div class="sl-row">
+                <input type="range" min="1" max="5" step="1" value="3" id="f-urg" oninput="updateScorePreview()">
+                <span class="sl-val" id="sv-urg">3</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Effort <span id="lv-eff">3</span>/5</label>
+              <div class="sl-row">
+                <input type="range" min="1" max="5" step="1" value="3" id="f-eff" oninput="updateScorePreview()">
+                <span class="sl-val" id="sv-eff">3</span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Risk <span id="lv-risk">3</span>/5</label>
+              <div class="sl-row">
+                <input type="range" min="1" max="5" step="1" value="3" id="f-risk" oninput="updateScorePreview()">
+                <span class="sl-val" id="sv-risk">3</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label" for="f-due">Due Date</label>
+            <input class="field-input" id="f-due" type="date">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="f-assigned">Assigned To</label>
+            <input class="field-input" id="f-assigned" type="text" placeholder="Name">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="f-notes">Notes</label>
+          <textarea class="field-input field-textarea" id="f-notes" placeholder="Optional notes..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-secondary" type="button" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" type="button" onclick="saveTask()">Save Task</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-el" id="fw-toast"></div>
+
+  <script src="logic.js"></script>
+  <script src="ui.js"></script>
+</body>
+</html>

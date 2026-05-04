@@ -1,0 +1,271 @@
+let { tasks, nid } = loadData();
+let cf = 'All';
+let sf = 'Active';
+let sb = 'score';
+let eid = null;
+
+function esc(str) {
+  return String(str).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[ch]));
+}
+
+function btn(variant, label, onclickStr) {
+  const cls = {
+    edit: 'action-btn action-edit',
+    done: 'action-btn action-done',
+    del: 'action-btn action-del',
+    reopen: 'action-btn action-reopen',
+  };
+  return `<button class="${cls[variant]}" type="button" onclick="${onclickStr}">${label}</button>`;
+}
+
+function renderStats() {
+  const s = calcStats(tasks);
+  document.getElementById('stats-row').innerHTML =
+    `<div class="stat-pill"><span class="sv">${s.active}</span><span class="sl">Active</span></div>` +
+    `<div class="stat-pill hi"><span class="sv">${s.hi}</span><span class="sl">High priority</span></div>` +
+    `<div class="stat-pill"><span class="sv">${s.done}</span><span class="sl">Done</span></div>` +
+    `<div class="stat-pill"><span class="sv">${s.total}</span><span class="sl">Total</span></div>`;
+}
+
+function chipCls(status) {
+  if (status === 'In Progress') return 'chip chip-prog';
+  if (status === 'On Hold') return 'chip chip-hold';
+  if (status === 'Done') return 'chip chip-done';
+  return 'chip chip-def';
+}
+
+function cardHTML(t, isDone) {
+  const sc = t.score;
+  const col = scoreColor(sc);
+  const tl = tierLabel(sc);
+  const np = t.notes && t.notes.length > 80 ? t.notes.slice(0, 80) + '...' : t.notes;
+
+  let chips = `<span class="${chipCls(t.status)}">${esc(t.status)}</span>`;
+  chips += `<span class="chip chip-def">${esc(t.category)}</span>`;
+
+  if (t.risk >= 4) chips += `<span class="chip chip-rhi">High Risk</span>`;
+  else if (t.risk === 3) chips += `<span class="chip chip-rmd">Med Risk</span>`;
+
+  if (isOverdue(t)) chips += `<span class="chip chip-over">Overdue ${esc(t.dueDate)}</span>`;
+  else if (t.dueDate) chips += `<span class="chip chip-def">${esc(t.dueDate)}</span>`;
+
+  if (t.assigned) chips += `<span class="chip chip-def">${esc(t.assigned)}</span>`;
+
+  const editB = btn('edit', 'Edit', `openModal(${t.id})`);
+  const doneB = btn('done', 'Done', `markDone(${t.id})`);
+  const reopenB = btn('reopen', 'Reopen', `reopen(${t.id})`);
+  const delB = btn('del', 'Delete', `delTask(${t.id})`);
+  const acts = isDone ? editB + reopenB + delB : editB + doneB + delB;
+
+  return `
+    <article class="task-card${isDone ? ' done' : ''}">
+      <div class="card-top">
+        <div class="score-col">
+          <div class="s-num" style="color:${col}">${sc}</div>
+          <div class="s-bar"><div class="s-fill" style="width:${sc}%;background:${col}"></div></div>
+          <div class="s-lbl">${tl}</div>
+        </div>
+        <div class="card-body">
+          <h3 class="c-title${isDone ? ' struck' : ''}">${esc(t.title)}</h3>
+          <div class="chips">${chips}</div>
+          ${np ? `<p class="c-notes">${esc(np)}</p>` : ''}
+        </div>
+      </div>
+      <div class="card-actions">${acts}</div>
+    </article>`;
+}
+
+function renderSection(title, subtitle, content, actionHtml = '') {
+  return `
+    <section class="task-section">
+      <div class="task-section-head">
+        <div>
+          <h2 class="task-section-title">${title}</h2>
+          <p class="task-section-meta">${subtitle}</p>
+        </div>
+        ${actionHtml}
+      </div>
+      <div class="task-stack">${content}</div>
+    </section>`;
+}
+
+function render() {
+  cf = document.getElementById('cat-filter').value;
+  sf = document.getElementById('status-filter').value;
+
+  const fil = applySort(applyFilters(tasks, cf, sf), sb);
+  const active = fil.filter(t => t.status !== 'Done');
+  const done = fil.filter(t => t.status === 'Done');
+
+  renderStats();
+  document.getElementById('task-count').textContent =
+    `${fil.length} task${fil.length !== 1 ? 's' : ''}`;
+
+  let h = '';
+
+  h += renderSection(
+    'Active tasks',
+    active.length ? 'Focused work for now' : 'Nothing active right now',
+    active.length ? active.map(t => cardHTML(t, false)).join('') : '<p class="empty-msg">No active tasks</p>',
+  );
+
+  if (sf === 'Done') {
+    h += renderSection(
+      'Completed tasks',
+      done.length ? 'Finished work' : 'Nothing done yet',
+      done.length ? done.map(t => cardHTML(t, true)).join('') : '<p class="empty-msg">Nothing done yet</p>',
+    );
+  }
+
+  document.getElementById('list-wrap').innerHTML = h;
+  setSortButtons();
+}
+
+function setSortButtons() {
+  ['score', 'name', 'due'].forEach(k => {
+    const el = document.getElementById('sb-' + k);
+    el.classList.toggle('is-active', k === sb);
+    el.setAttribute('aria-pressed', String(k === sb));
+  });
+}
+
+function setSort(v) {
+  sb = v;
+  setSortButtons();
+  render();
+}
+
+function markDone(id) {
+  const t = tasks.find(x => x.id === id);
+  if (t) {
+    t.status = 'Done';
+    saveData(tasks, nid);
+    render();
+  }
+}
+
+function reopen(id) {
+  const t = tasks.find(x => x.id === id);
+  if (t) {
+    t.status = 'Not Started';
+    saveData(tasks, nid);
+    render();
+  }
+}
+
+function delTask(id) {
+  if (!confirm('Delete permanently?')) return;
+  tasks = tasks.filter(x => x.id !== id);
+  saveData(tasks, nid);
+  render();
+  toast('Task deleted');
+}
+
+function openModal(id) {
+  eid = id;
+  const t = id ? tasks.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = t ? 'Edit Task' : 'New Task';
+  document.getElementById('f-title').value = t ? t.title : '';
+  document.getElementById('f-status').value = t ? t.status : 'Not Started';
+  document.getElementById('f-cat').value = t ? t.category : 'Clinical';
+  document.getElementById('f-due').value = t ? t.dueDate : '';
+  document.getElementById('f-assigned').value = t ? t.assigned : '';
+  document.getElementById('f-notes').value = t ? t.notes : '';
+
+  ['imp', 'urg', 'eff', 'risk'].forEach(k => {
+    const fk = { imp: 'impact', urg: 'urgency', eff: 'effort', risk: 'risk' }[k];
+    document.getElementById('f-' + k).value = t ? t[fk] : 3;
+  });
+
+  updateScorePreview();
+  document.getElementById('modal-overlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('f-title').focus(), 60);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  eid = null;
+}
+
+function overlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function updateScorePreview() {
+  const imp = +document.getElementById('f-imp').value;
+  const urg = +document.getElementById('f-urg').value;
+  const eff = +document.getElementById('f-eff').value;
+  const risk = +document.getElementById('f-risk').value;
+
+  ['imp', 'urg', 'eff', 'risk'].forEach(k => {
+    const v = { imp, urg, eff, risk }[k];
+    document.getElementById('sv-' + k).textContent = v;
+    document.getElementById('lv-' + k).textContent = v;
+  });
+
+  const s = Math.round((imp * 0.4 + urg * 0.35 + (6 - eff) * 0.25) * 20);
+  const col = scoreColor(s);
+  document.getElementById('sp-val').textContent = s;
+  document.getElementById('sp-val').style.color = col;
+  document.getElementById('sp-tier').textContent = tierLabel(s) + ' Priority';
+  const bar = document.getElementById('sp-bar');
+  bar.style.width = s + '%';
+  bar.style.background = col;
+}
+
+function saveTask() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) {
+    document.getElementById('f-title').focus();
+    toast('Title is required');
+    return;
+  }
+
+  const t = {
+    id: eid || nid,
+    title,
+    status: document.getElementById('f-status').value,
+    category: document.getElementById('f-cat').value,
+    impact: +document.getElementById('f-imp').value,
+    urgency: +document.getElementById('f-urg').value,
+    effort: +document.getElementById('f-eff').value,
+    risk: +document.getElementById('f-risk').value,
+    dueDate: document.getElementById('f-due').value,
+    assigned: document.getElementById('f-assigned').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+    score: 0,
+  };
+  t.score = calcScore(t);
+
+  if (eid) {
+    const i = tasks.findIndex(x => x.id === eid);
+    if (i >= 0) tasks[i] = t;
+  } else {
+    tasks.push(t);
+    nid++;
+  }
+
+  saveData(tasks, nid);
+  closeModal();
+  render();
+  toast(eid ? 'Task updated' : 'Task created');
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('fw-toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.style.display = 'none';
+  }, 2200);
+}
+
+render();
