@@ -16,8 +16,16 @@
     <header class="topbar">
       <div class="topbar-row">
         <div class="topbar-copy">
-          <p class="eyebrow">Task board</p>
-          <h1 class="topbar-brand">Flosswork</h1>
+          <div class="brand-lockup">
+            <span class="brand-logo-wrap" aria-hidden="true">
+              <img class="brand-logo" src="logo.png" alt="" onerror="this.style.display='none'">
+              <span class="brand-logo-fallback">F</span>
+            </span>
+            <div class="brand-copy">
+              <p class="eyebrow">Task board</p>
+              <h1 class="topbar-brand">Flosswork</h1>
+            </div>
+          </div>
         </div>
         <button class="header-action" type="button" onclick="openModal(null)">New</button>
       </div>

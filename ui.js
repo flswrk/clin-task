@@ -14,16 +14,6 @@ function esc(str) {
   }[ch]));
 }
 
-function btn(variant, label, onclickStr) {
-  const cls = {
-    edit: 'action-btn action-edit',
-    done: 'action-btn action-done',
-    del: 'action-btn action-del',
-    reopen: 'action-btn action-reopen',
-  };
-  return `<button class="${cls[variant]}" type="button" onclick="${onclickStr}">${label}</button>`;
-}
-
 function renderStats() {
   const s = calcStats(tasks);
   document.getElementById('stats-row').innerHTML =
@@ -45,6 +35,7 @@ function cardHTML(t, isDone) {
   const col = scoreColor(sc);
   const tl = tierLabel(sc);
   const np = t.notes && t.notes.length > 80 ? t.notes.slice(0, 80) + '...' : t.notes;
+  const toggleLabel = isDone ? 'Mark as active' : 'Mark as done';
 
   let chips = `<span class="${chipCls(t.status)}">${esc(t.status)}</span>`;
   chips += `<span class="chip chip-def">${esc(t.category)}</span>`;
@@ -57,15 +48,13 @@ function cardHTML(t, isDone) {
 
   if (t.assigned) chips += `<span class="chip chip-def">${esc(t.assigned)}</span>`;
 
-  const editB = btn('edit', 'Edit', `openModal(${t.id})`);
-  const doneB = btn('done', 'Done', `markDone(${t.id})`);
-  const reopenB = btn('reopen', 'Reopen', `reopen(${t.id})`);
-  const delB = btn('del', 'Delete', `delTask(${t.id})`);
-  const acts = isDone ? editB + reopenB + delB : editB + doneB + delB;
-
   return `
-    <article class="task-card${isDone ? ' done' : ''}">
+    <article class="task-card${isDone ? ' done' : ''}" role="button" tabindex="0" onclick="openModal(${t.id})" onkeydown="cardKeydown(event, ${t.id})" aria-label="Edit ${esc(t.title)}">
+      <button class="card-delete" type="button" aria-label="Delete ${esc(t.title)}" onclick="event.stopPropagation(); delTask(${t.id})">×</button>
       <div class="card-top">
+        <button class="task-toggle${isDone ? ' is-done' : ''}" type="button" aria-label="${toggleLabel}" aria-pressed="${isDone ? 'true' : 'false'}" onclick="event.stopPropagation(); toggleTask(${t.id})">
+          <span class="task-toggle-mark">${isDone ? '✓' : ''}</span>
+        </button>
         <div class="score-col">
           <div class="s-num" style="color:${col}">${sc}</div>
           <div class="s-bar"><div class="s-fill" style="width:${sc}%;background:${col}"></div></div>
@@ -77,7 +66,6 @@ function cardHTML(t, isDone) {
           ${np ? `<p class="c-notes">${esc(np)}</p>` : ''}
         </div>
       </div>
-      <div class="card-actions">${acts}</div>
     </article>`;
 }
 
@@ -138,6 +126,21 @@ function setSortButtons() {
 function setSort(v) {
   sb = v;
   setSortButtons();
+  render();
+}
+
+function cardKeydown(e, id) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openModal(id);
+  }
+}
+
+function toggleTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  t.status = t.status === 'Done' ? 'Not Started' : 'Done';
+  saveData(tasks, nid);
   render();
 }
 
