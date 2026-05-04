@@ -655,7 +655,7 @@ button {
   max-width: 720px;
   max-height: 92vh;
   overflow: auto;
-  padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
+  padding: 20px 18px calc(16px + env(safe-area-inset-bottom));
   border-radius: 24px 24px 0 0;
   box-shadow: var(--shadow-lg);
 }
@@ -775,10 +775,20 @@ button {
 }
 
 .modal-footer {
+  position: sticky;
+  bottom: calc(-16px - env(safe-area-inset-bottom));
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-top: 18px;
+  margin-left: -18px;
+  margin-right: -18px;
+  margin-bottom: calc(-16px - env(safe-area-inset-bottom));
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .modal-btn {
