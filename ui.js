@@ -148,6 +148,22 @@ function setSort(v) {
   render();
 }
 
+function keepSavedTaskVisible(task) {
+  const statusFilter = document.getElementById('status-filter');
+  if (!statusFilter) return;
+
+  if (task.status === 'Done') {
+    statusFilter.value = 'Done';
+    sf = 'Done';
+    return;
+  }
+
+  if (statusFilter.value === 'Done') {
+    statusFilter.value = 'Active';
+    sf = 'Active';
+  }
+}
+
 function cardKeydown(e, id) {
   if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault();
@@ -275,6 +291,7 @@ async function saveTask() {
     if (i >= 0) tasks[i] = updated;
     syncLocalCache();
     closeModal();
+    keepSavedTaskVisible(updated);
     render();
     toast('Task updated');
 
@@ -296,6 +313,7 @@ async function saveTask() {
   tasks.push(created);
   syncLocalCache();
   closeModal();
+  keepSavedTaskVisible(created);
   render();
   toast('Task created');
 }
