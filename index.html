@@ -8,7 +8,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Flosswork">
   <title>Flosswork</title>
-  <link rel="stylesheet" href="theme.css">
+<script>
+  const v = Date.now();
+  document.write(`<link rel="stylesheet" href="theme.css?v=${v}">`);
+  document.write(`<script src="logic.js?v=${v}"><\/script>`);
+  document.write(`<script src="ui.js?v=${v}"><\/script>`);
+</script>
 </head>
 <body>
   <div id="app" class="app-shell">
@@ -222,9 +227,13 @@
 
   <div class="toast-el" id="fw-toast"></div>
 
-<script src="supabase-config.js?v=2"></script>
-<script src="logic.js?v=2"></script>
-<script src="ui.js?v=2"></script>
+<script>
+  const v = Date.now();
+
+  document.write(`<script src="supabase-config.js?v=${v}"><\/script>`);
+  document.write(`<script src="logic.js?v=${v}"><\/script>`);
+  document.write(`<script src="ui.js?v=${v}"><\/script>`);
+</script>
 
 </body>
 </html>
