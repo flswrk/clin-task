@@ -1,8 +1,10 @@
-let { tasks, nid } = loadData();
+let tasks = [];
+let nid = 1;
 let cf = 'All';
 let sf = 'Active';
 let sb = 'score';
 let eid = null;
+let appReady = false;
 
 function esc(str) {
   return String(str).replace(/[&<>"']/g, ch => ({
@@ -12,6 +14,19 @@ function esc(str) {
     '"': '&quot;',
     "'": '&#39;',
   }[ch]));
+}
+
+function syncLocalCache() {
+  saveData(tasks, nid);
+}
+
+function upsertLocalTask(task) {
+  const i = tasks.findIndex(x => x.id === task.id);
+  if (i >= 0) {
+    tasks[i] = task;
+  } else {
+    tasks.push(task);
+  }
 }
 
 function renderStats() {
@@ -88,6 +103,17 @@ function render() {
   sf = document.getElementById('status-filter').value;
   sb = document.getElementById('sort-filter').value;
 
+  if (!appReady) {
+    document.getElementById('task-count').textContent = 'Loading...';
+    document.getElementById('stats-row').innerHTML = '';
+    document.getElementById('list-wrap').innerHTML = renderSection(
+      'Active tasks',
+      'Loading from storage',
+      '<p class="empty-msg">Loading tasks...</p>',
+    );
+    return;
+  }
+
   const fil = applySort(applyFilters(tasks, cf, sf), sb);
   const active = fil.filter(t => t.status !== 'Done');
   const done = fil.filter(t => t.status === 'Done');
@@ -129,38 +155,43 @@ function cardKeydown(e, id) {
   }
 }
 
-function toggleTask(id) {
+async function toggleTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
+
   t.status = t.status === 'Done' ? 'Not Started' : 'Done';
-  saveData(tasks, nid);
+  syncLocalCache();
   render();
+  void patchTaskRemote(id, { status: t.status });
 }
 
-function markDone(id) {
+async function markDone(id) {
   const t = tasks.find(x => x.id === id);
-  if (t) {
-    t.status = 'Done';
-    saveData(tasks, nid);
-    render();
-  }
+  if (!t) return;
+
+  t.status = 'Done';
+  syncLocalCache();
+  render();
+  void patchTaskRemote(id, { status: t.status });
 }
 
-function reopen(id) {
+async function reopen(id) {
   const t = tasks.find(x => x.id === id);
-  if (t) {
-    t.status = 'Not Started';
-    saveData(tasks, nid);
-    render();
-  }
+  if (!t) return;
+
+  t.status = 'Not Started';
+  syncLocalCache();
+  render();
+  void patchTaskRemote(id, { status: t.status });
 }
 
-function delTask(id) {
+async function delTask(id) {
   if (!confirm('Delete permanently?')) return;
   tasks = tasks.filter(x => x.id !== id);
-  saveData(tasks, nid);
+  syncLocalCache();
   render();
   toast('Task deleted');
+  void deleteTaskRemote(id);
 }
 
 function openModal(id) {
@@ -215,7 +246,7 @@ function updateScorePreview() {
   bar.style.background = col;
 }
 
-function saveTask() {
+async function saveTask() {
   const title = document.getElementById('f-title').value.trim();
   if (!title) {
     document.getElementById('f-title').focus();
@@ -223,8 +254,7 @@ function saveTask() {
     return;
   }
 
-  const t = {
-    id: eid || nid,
+  const draft = {
     title,
     status: document.getElementById('f-status').value,
     category: document.getElementById('f-cat').value,
@@ -237,20 +267,37 @@ function saveTask() {
     notes: document.getElementById('f-notes').value.trim(),
     score: 0,
   };
-  t.score = calcScore(t);
+  draft.score = calcScore(draft);
 
   if (eid) {
+    const updated = { ...draft, id: eid };
     const i = tasks.findIndex(x => x.id === eid);
-    if (i >= 0) tasks[i] = t;
-  } else {
-    tasks.push(t);
-    nid++;
+    if (i >= 0) tasks[i] = updated;
+    syncLocalCache();
+    closeModal();
+    render();
+    toast('Task updated');
+
+    const remote = await patchTaskRemote(eid, taskToRow(updated));
+    if (remote) {
+      upsertLocalTask(remote);
+      nid = Math.max(nid, (Number(remote.id) || eid) + 1);
+      syncLocalCache();
+      render();
+    }
+    return;
   }
 
-  saveData(tasks, nid);
+  const remote = await createTaskRemote(draft);
+  const created = remote || { ...draft, id: nid };
+  if (!remote) nid++;
+  else nid = Math.max(nid, (Number(created.id) || nid) + 1);
+
+  tasks.push(created);
+  syncLocalCache();
   closeModal();
   render();
-  toast(eid ? 'Task updated' : 'Task created');
+  toast('Task created');
 }
 
 let toastTimer = null;
@@ -264,4 +311,10 @@ function toast(msg) {
   }, 2200);
 }
 
-render();
+(async function bootstrap() {
+  const data = await loadData();
+  tasks = data.tasks;
+  nid = data.nid;
+  appReady = true;
+  render();
+})();
