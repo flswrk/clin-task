@@ -30,46 +30,11 @@ function isOverdue(t) {
 }
 
 function seedTasks() {
-  const seed = [
-    {
-      title: 'Review pending clinical follow-ups',
-      status: 'In Progress',
-      category: 'Clinical',
-      impact: 4,
-      urgency: 4,
-      effort: 2,
-      risk: 4,
-      dueDate: todayStr(),
-      assigned: 'Ops lead',
-      notes: 'Clear same-day patient callbacks and confirm next actions.',
-    },
-    {
-      title: 'Close month-end expense reconciliation',
-      status: 'Not Started',
-      category: 'Finance',
-      impact: 3,
-      urgency: 3,
-      effort: 3,
-      risk: 2,
-      dueDate: '',
-      assigned: 'Finance',
-      notes: 'Match receipts, flag exceptions, and prep the summary.',
-    },
-    {
-      title: 'Audit onboarding checklist',
-      status: 'On Hold',
-      category: 'Compliance',
-      impact: 5,
-      urgency: 3,
-      effort: 4,
-      risk: 5,
-      dueDate: '',
-      assigned: 'Admin',
-      notes: 'Verify that forms, consent docs, and storage steps are current.',
-    },
-  ];
+  return [];
+}
 
-  return seed.map((t, i) => {
+function seedTasks() {
+  return SEED.map((t, i) => {
     const o = { ...t, id: i + 1, score: 0 };
     o.score = calcScore(o);
     return o;
@@ -79,7 +44,7 @@ function seedTasks() {
 function loadLocalData() {
   try {
     const d = JSON.parse(localStorage.getItem(STORE_KEY));
-    if (d && Array.isArray(d.t) && d.t.length) {
+    if (d && Array.isArray(d.t)) {
       return { tasks: d.t, nid: d.n || d.t.length + 1, source: 'local' };
     }
   } catch (e) {}
@@ -178,7 +143,7 @@ async function loadDataFromSupabase() {
 
     if (!rows.length) {
       const seedRows = seedTasks().map(taskToRow);
-      await supabaseRequest(`${SUPABASE_TABLE}?select=id`, {
+      await supabaseRequest(`${SUPABASE_TABLE}?select=*`, {
         method: 'POST',
         body: seedRows,
         prefer: 'return=representation',
