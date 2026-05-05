@@ -61,6 +61,12 @@ select,
 textarea {
   font: inherit;
 }
+/* 🔥 Prevent iOS zoom */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
 
 button {
   border: 0;
@@ -359,7 +365,7 @@ button {
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
-  font-size: 15px;
+  font-size: 16px;
   outline: none;
   -webkit-appearance: none;
   transition: border-color var(--transition), box-shadow var(--transition);
