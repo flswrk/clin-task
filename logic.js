@@ -29,20 +29,9 @@ function isOverdue(t) {
   return t.dueDate && t.dueDate < todayStr() && t.status !== 'Done';
 }
 
-const SEED = [
-  { title: 'Set up infection control protocol review', status: 'In Progress', category: 'Compliance', impact: 5, urgency: 5, effort: 3, risk: 4, dueDate: '2025-02-10', assigned: 'Dr. Chen', notes: 'Quarterly review required by board' },
-  { title: 'Upgrade dental chair in bay 2', status: 'Not Started', category: 'Clinical', impact: 4, urgency: 3, effort: 5, risk: 2, dueDate: '2025-03-15', assigned: '', notes: 'Get 3 quotes before ordering' },
-  { title: 'Submit monthly insurance claims', status: 'In Progress', category: 'Finance', impact: 5, urgency: 5, effort: 2, risk: 3, dueDate: '2025-01-31', assigned: 'Lisa', notes: '' },
-  { title: 'Update patient recall SMS templates', status: 'Not Started', category: 'Growth', impact: 3, urgency: 2, effort: 2, risk: 1, dueDate: '', assigned: '', notes: 'Use new brand tone guidelines' },
-  { title: 'Fix appointment booking widget', status: 'On Hold', category: 'Systems', impact: 4, urgency: 4, effort: 3, risk: 2, dueDate: '2025-02-05', assigned: 'Dev team', notes: 'Waiting on hosting access' },
-  { title: 'Staff training: new sterilisation unit', status: 'Not Started', category: 'Clinical', impact: 4, urgency: 3, effort: 2, risk: 4, dueDate: '2025-02-20', assigned: 'All staff', notes: '' },
-  { title: 'Negotiate supply contract renewal', status: 'Done', category: 'Finance', impact: 3, urgency: 4, effort: 3, risk: 2, dueDate: '2025-01-15', assigned: 'Manager', notes: 'Signed 12-month extension' },
-  { title: 'Set up Google Business Profile', status: 'Done', category: 'Growth', impact: 3, urgency: 2, effort: 1, risk: 1, dueDate: '', assigned: '', notes: 'Verified and live' },
-  { title: 'Archive 2023 patient records', status: 'Done', category: 'Operations', impact: 2, urgency: 1, effort: 3, risk: 2, dueDate: '', assigned: '', notes: '' },
-  { title: 'Review and renew professional indemnity insurance', status: 'Done', category: 'Compliance', impact: 5, urgency: 5, effort: 2, risk: 5, dueDate: '2025-01-10', assigned: 'Owner', notes: 'Renewed for 2 years at better rate' },
-  { title: 'Implement online deposit payment system', status: 'Not Started', category: 'Finance', impact: 4, urgency: 3, effort: 4, risk: 2, dueDate: '2025-04-01', assigned: '', notes: 'Reduces no-shows' },
-  { title: 'Conduct patient satisfaction survey', status: 'Done', category: 'Growth', impact: 3, urgency: 2, effort: 2, risk: 1, dueDate: '', assigned: '', notes: 'NPS score: 72' },
-];
+function seedTasks() {
+  return [];
+}
 
 function seedTasks() {
   return SEED.map((t, i) => {
