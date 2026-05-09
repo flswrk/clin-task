@@ -236,7 +236,14 @@ function updateScorePreview() {
     document.getElementById('lv-' + k).textContent = v;
   });
 
-  const s = Math.round((imp * 0.4 + urg * 0.35 + (6 - eff) * 0.25) * 20);
+const s = Math.round(
+  (
+    imp * 0.35 +
+    urg * 0.30 +
+    risk * 0.20 +
+    (6 - eff) * 0.15
+  ) * 20
+);
   const col = scoreColor(s);
   document.getElementById('sp-val').textContent = s;
   document.getElementById('sp-val').style.color = col;

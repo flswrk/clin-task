@@ -6,9 +6,15 @@ const SUPABASE_TABLE = SUPABASE_CONFIG.table || 'tasks';
 const SUPABASE_ENABLED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 function calcScore(t) {
-  return Math.round((t.impact * 0.4 + t.urgency * 0.35 + (6 - t.effort) * 0.25) * 20);
+  return Math.round(
+    (
+      t.impact * 0.35 +
+      t.urgency * 0.30 +
+      t.risk * 0.20 +
+      (6 - t.effort) * 0.15
+    ) * 20
+  );
 }
-
 function tierLabel(s) {
   return s >= 80 ? 'High' : s >= 60 ? 'Moderate' : 'Low';
 }
