@@ -1140,9 +1140,16 @@ function tick(id, el) {
 /* ══════════════════════════════════════════════════════════
    RENDER — ACTIVE  (one focus task up top, the rest "Up next")
    ══════════════════════════════════════════════════════════ */
+// Overdue tasks come first, then tasks due today, then everything else —
+// whatever the sort, so nothing time-critical is buried under the score.
+function dueGroup(t) {
+  if (t.done || !t.dueDate) return 2;
+  const td = today();
+  return t.dueDate < td ? 0 : t.dueDate === td ? 1 : 2;
+}
 function activeRanked() {
   return tasks.filter(t => t.onToday && !t.done)
-    .sort((a, b) => b.score - a.score || b.risk - a.risk || a.title.localeCompare(b.title));
+    .sort((a, b) => dueGroup(a) - dueGroup(b) || b.score - a.score || b.risk - a.risk || a.title.localeCompare(b.title));
 }
 // The focus task is the one the user picked, or — if none picked (or it was
 // completed/removed) — the top-ranked Active task.
@@ -1228,7 +1235,7 @@ function renderBacklog() {
   });
 
   // Sort
-  all.sort((a, b) => sortDir * (
+  all.sort((a, b) => dueGroup(a) - dueGroup(b) || sortDir * (   // overdue / today stay on top, in either sort direction
     sortBy === 'score' ? b.score - a.score :
     sortBy === 'name'  ? a.title.localeCompare(b.title) :
     !a.dueDate && !b.dueDate ? 0 : !a.dueDate ? 1 : !b.dueDate ? -1 :
