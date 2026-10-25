@@ -90,7 +90,8 @@
   /* Priority palette (P1 high · P2 mid · P3 low) */
   --p1: #D1453B;  --p1-tint: rgba(209,69,59,.12);
   --p2: #EB8909;  --p2-tint: rgba(235,137,9,.14);
-  --p3: #8C8C8C;  --p3-tint: rgba(140,140,140,.12);
+  --p3: #246FE0;  --p3-tint: rgba(36,111,224,.12);
+  --p4: #8C8C8C;  --p4-tint: rgba(140,140,140,.12);
 
   /* Date semantics */
   --due-ok:      #058527;   /* today */
@@ -122,7 +123,8 @@
     --brand:#E44232; --brand-dk:#F0584A; --brand-tint:#3A2320;
     --p1:#FF7066; --p1-tint:rgba(255,112,102,.16);
     --p2:#FF9A14; --p2-tint:rgba(255,154,20,.16);
-    --p3:#8F8F8F; --p3-tint:rgba(143,143,143,.16);
+    --p3:#5297FF; --p3-tint:rgba(82,151,255,.16);
+    --p4:#8F8F8F; --p4-tint:rgba(143,143,143,.16);
     --due-ok:#5AC47A; --due-late:#FF7066; --due-later:#B58CFF;
     --shadow-fab:0 4px 14px rgba(0,0,0,.5);
     --shadow-sheet:0 -8px 40px rgba(0,0,0,.6);
@@ -137,7 +139,8 @@
   --brand:#E44232; --brand-dk:#F0584A; --brand-tint:#3A2320;
   --p1:#FF7066; --p1-tint:rgba(255,112,102,.16);
   --p2:#FF9A14; --p2-tint:rgba(255,154,20,.16);
-  --p3:#8F8F8F; --p3-tint:rgba(143,143,143,.16);
+  --p3:#5297FF; --p3-tint:rgba(82,151,255,.16);
+  --p4:#8F8F8F; --p4-tint:rgba(143,143,143,.16);
   --due-ok:#5AC47A; --due-late:#FF7066; --due-later:#B58CFF;
   --shadow-fab:0 4px 14px rgba(0,0,0,.5);
   --shadow-sheet:0 -8px 40px rgba(0,0,0,.6);
@@ -218,7 +221,7 @@ svg { display:block; }
 .task:active { background:var(--bg-hover); }
 .task.leaving { opacity:0; transform:translateX(18px); }
 .task-main { flex:1; min-width:0; }
-.task-title { font-size:16px; line-height:1.35; font-weight:400; color:var(--ink); word-break:break-word; }
+.task-title { font-size:16px; line-height:1.35; font-weight:700; color:var(--ink); word-break:break-word; }
 .task-meta { display:flex; align-items:center; flex-wrap:wrap; gap:4px 12px; margin-top:4px; font-size:12px; color:var(--ink-2); }
 .meta { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
 .meta svg { width:13px; height:13px; flex-shrink:0; }
@@ -230,10 +233,10 @@ svg { display:block; }
 .focus-card { transition:opacity .3s ease, transform .3s ease; }
 .focus-card.leaving { opacity:0; transform:scale(.97); }
 .meta.score { font-family:var(--fm); font-weight:600; }
-.meta.hi { color:var(--p1); } .meta.md { color:var(--p2); } .meta.lo { color:var(--ink-3); }
+.meta.p1 { color:var(--p1); } .meta.p2 { color:var(--p2); } .meta.p3 { color:var(--p3); } .meta.p4 { color:var(--ink-3); }
 .meta.proj { color:var(--ink-3); }
 .meta.proj .hash { font-weight:600; color:var(--ink-3); }
-.task.done .task-title { color:var(--ink-3); text-decoration:line-through; }
+.task.done .task-title { color:var(--ink-3); text-decoration:line-through; font-weight:500; }
 .task.done .task-meta { opacity:.7; }
 .in-active-dot { width:6px; height:6px; border-radius:50%; background:var(--due-ok); display:inline-block; }
 
@@ -246,6 +249,7 @@ svg { display:block; }
 .chk.p1 { --c:var(--p1); --ct:var(--p1-tint); }
 .chk.p2 { --c:var(--p2); --ct:var(--p2-tint); }
 .chk.p3 { --c:var(--p3); --ct:var(--p3-tint); }
+.chk.p4 { --c:var(--p4); --ct:var(--p4-tint); }
 .chk.ticked, .task.leaving .chk { background:var(--c); color:#fff; }
 .chk.ticked svg, .task.leaving .chk svg { opacity:1; }
 
@@ -270,7 +274,7 @@ svg { display:block; }
 /* ── FOCUS VIEW ────────────────────────────────────────── */
 .focus-card { margin-top:8px; border:1px solid var(--line-strong); border-radius:var(--r-xl); padding:22px 20px 18px; background:var(--bg); position:relative; overflow:hidden; }
 .focus-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--c); }
-.focus-card.p1 { --c:var(--p1); } .focus-card.p2 { --c:var(--p2); } .focus-card.p3 { --c:var(--p3); }
+.focus-card.p1 { --c:var(--p1); } .focus-card.p2 { --c:var(--p2); } .focus-card.p3 { --c:var(--p3); } .focus-card.p4 { --c:var(--p4); }
 .focus-top { display:flex; align-items:flex-start; gap:14px; }
 .focus-top .chk { width:28px; height:28px; margin-top:4px; }
 .focus-top .chk svg { width:15px; height:15px; }
@@ -281,7 +285,7 @@ svg { display:block; }
 .chip.late { color:var(--due-late); background:var(--p1-tint); }
 .chip.soon { color:var(--due-ok); }
 .chip.risk { color:var(--p1); background:var(--p1-tint); }
-.chip.hi { color:var(--p1); background:var(--p1-tint); } .chip.md { color:var(--p2); background:var(--p2-tint); } .chip.lo { color:var(--ink-2); }
+.chip.p1 { color:var(--p1); background:var(--p1-tint); } .chip.p2 { color:var(--p2); background:var(--p2-tint); } .chip.p3 { color:var(--p3); background:var(--p3-tint); } .chip.p4 { color:var(--ink-2); }
 .focus-btns { display:flex; gap:10px; }
 .focus-btns .btn { flex:1; }
 .focus-btns .btn.ghost { flex:0 0 auto; }
@@ -308,6 +312,21 @@ svg { display:block; }
 .tc-empty .btn { margin-top:18px; }
 
 /* ── FILTER BAR (All Tasks) ────────────────────────────── */
+.hdr-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.hdr-row .hdr { flex:0 1 auto; min-width:0; }
+.hdr-row .hdr-sub { white-space:nowrap; }
+.hdr-row .search { flex:1 1 0; min-width:0; max-width:340px; margin:8px 0 0; }
+.search { display:flex; align-items:center; gap:8px; height:42px; padding:0 6px 0 12px; margin:2px 0 6px; background:var(--bg-chip); border-radius:var(--r-md); border:1.5px solid transparent; transition:border-color .12s, background .12s; }
+.search:focus-within { border-color:var(--brand); background:var(--bg); }
+.search > svg { width:18px; height:18px; flex-shrink:0; color:var(--ink-3); }
+.search input { flex:1; min-width:0; height:100%; border:0; outline:0; background:transparent; font-size:16px; color:var(--ink); -webkit-appearance:none; appearance:none; }
+.search input::placeholder { color:var(--ink-3); }
+.search input::-webkit-search-cancel-button, .search input::-webkit-search-decoration { -webkit-appearance:none; display:none; }
+.search button { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--ink-3); flex-shrink:0; }
+.search button[hidden] { display:none; }
+.search button:hover { background:var(--bg-hover); color:var(--ink); }
+.search button svg { width:16px; height:16px; }
+mark.hit { background:var(--p2-tint); color:inherit; border-radius:2px; padding:0; }
 .fbar { background:var(--bg); position:sticky; top:52px; z-index:40; }
 .fbar-in { max-width:760px; margin:0 auto; padding:6px 16px 10px; display:flex; align-items:center; gap:8px; overflow-x:auto; scrollbar-width:none; }
 .fbar-in::-webkit-scrollbar { display:none; }
@@ -334,6 +353,23 @@ svg { display:block; }
 .m-ey { display:none; }
 .m-title { font-size:13px; font-weight:600; color:var(--ink-2); }
 .m-body { flex:1 1 auto; overflow-y:auto; padding:4px 20px 8px; }
+.datebtn { display:flex; align-items:center; justify-content:space-between; text-align:left; cursor:pointer; background:var(--bg); }
+.datebtn svg { width:18px; height:18px; color:var(--ink-3); }
+.datebtn .ph { color:var(--ink-3); }
+.datebtn[aria-expanded="true"] { border-color:var(--brand); }
+.cal { margin-top:8px; border:1px solid var(--line-strong); border-radius:var(--r-lg); padding:8px 10px 10px; background:var(--bg); }
+.cal[hidden] { display:none; }
+.cal-hd { display:flex; align-items:center; justify-content:space-between; }
+.cal-title { font-size:15px; font-weight:700; }
+.cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; }
+.cal-dow span { text-align:center; font-size:11px; font-weight:600; color:var(--ink-3); padding:6px 0 4px; }
+.cal-day { width:40px; height:40px; justify-self:center; border-radius:50%; font-size:14px; color:var(--ink); border:2px solid transparent; display:flex; align-items:center; justify-content:center; transition:background .1s; }
+.cal-day:hover { background:var(--bg-hover); }
+.cal-day.out { color:var(--ink-3); }
+.cal-day.today { border-color:var(--brand); font-weight:700; }
+.cal-day.picked { background:var(--brand); color:#fff; font-weight:700; }
+.cal-day.picked:hover { background:var(--brand-dk); }
+.cal-ft { display:flex; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid var(--line); }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .flbl { display:block; font-size:12px; font-weight:600; color:var(--ink-2); margin-bottom:6px; }
 .fi { width:100%; font-size:16px; color:var(--ink); background:var(--bg); border:1px solid var(--line-strong); border-radius:var(--r-sm); padding:10px 12px; outline:none; transition:border-color .12s; }
@@ -357,14 +393,16 @@ select.fi { appearance:none; -webkit-appearance:none; cursor:pointer; padding-ri
 
 /* Score preview */
 .sp { border-radius:var(--r-md); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin:14px 0 4px; background:var(--bg-chip); }
-.sp.hi { background:var(--p1-tint); color:var(--p1); }
-.sp.md { background:var(--p2-tint); color:var(--p2); }
-.sp.lo { background:var(--bg-chip); color:var(--ink-2); }
+.sp.p1 { background:var(--p1-tint); color:var(--p1); }
+.sp.p2 { background:var(--p2-tint); color:var(--p2); }
+.sp.p3 { background:var(--p3-tint); color:var(--p3); }
+.sp.p4 { background:var(--bg-chip); color:var(--ink-2); }
 .sp-lbl  { font-size:12px; font-weight:600; color:inherit; opacity:.85; }
 .sp-note { font-size:13px; font-weight:600; margin-top:2px; color:inherit; }
 .sp-num  { font-family:var(--fm); font-size:26px; font-weight:700; line-height:1; color:inherit; }
 .sp-den  { font-size:10px; text-align:right; opacity:.7; color:inherit; margin-top:2px; }
 
+.m-foot .btn { white-space:nowrap; padding-left:14px; padding-right:14px; }
 .m-foot { flex:0 0 auto; padding:12px 20px 16px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid var(--line); }
 
 /* ── PICK SHEET ────────────────────────────────────────── */
@@ -375,7 +413,7 @@ select.fi { appearance:none; -webkit-appearance:none; cursor:pointer; padding-ri
 .promo-item  { border-radius:var(--r-md); padding:12px 8px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background .12s; }
 .promo-item:hover { background:var(--bg-hover); }
 .promo-item .chk { margin-top:0; pointer-events:none; }
-.promo-item-t { flex:1; font-size:15px; color:var(--ink); }
+.promo-item-t { flex:1; font-size:15px; font-weight:700; color:var(--ink); }
 .promo-item-s { font-family:var(--fm); font-size:12px; font-weight:600; color:var(--ink-3); flex-shrink:0; }
 .promo-foot  { padding:8px 20px 16px; }
 .promo-foot .btn { width:100%; }
@@ -387,6 +425,7 @@ select.fi { appearance:none; -webkit-appearance:none; cursor:pointer; padding-ri
 /* ── LARGER SCREENS (the base styles above are phone-first) ── */
 @media (min-width:620px) {
   .nav-in, .page, .focus-inner, .fbar-in { padding-left:20px; padding-right:20px; }
+  .search input { font-size:14px; }
   .hdr h1 { font-size:30px; }
   .meta.proj { margin-left:auto; }
   .lbl-d { display:inline !important; }
@@ -461,21 +500,25 @@ select.fi { appearance:none; -webkit-appearance:none; cursor:pointer; padding-ri
 
 <!-- ── BACKLOG ─────────────────────────────────────────── -->
 <div class="view" id="v-backlog">
-  <div class="page" style="padding-bottom:0"><div class="hdr" style="padding-bottom:4px"><h1>All tasks</h1><div class="hdr-sub" id="b-sub"></div></div></div>
+  <div class="page" style="padding-bottom:0"><div class="hdr-row"><div class="hdr" style="padding-bottom:4px"><h1>All tasks</h1><div class="hdr-sub" id="b-sub"></div></div>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      <input type="search" id="q" placeholder="Search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search tasks">
+      <button type="button" id="q-x" hidden aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </label>
+  </div></div>
   <div class="fbar">
     <div class="fbar-in">
       <select class="sel" id="sel-cat"></select>
+      <button class="srt on" id="s-score" onclick="setSort('score')">Priority<span class="srt-arrow" id="arr-score"> ▼</span></button>
+      <button class="srt"    id="s-due"   onclick="setSort('due')">Due<span class="srt-arrow" id="arr-due"></span></button>
       <select class="sel" id="sel-status">
         <option value="All">All</option>
         <option value="Active">Active</option>
         <option value="Done">Done</option>
       </select>
       <button class="srt" id="s-projects" onclick="openProjects()" aria-label="Manage projects" title="Manage projects" style="background:var(--bg-chip)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg><span class="lbl-d" style="display:none">Projects</span></button>
-      <div class="divider"></div>
       <button class="srt" id="s-reset" onclick="resetFilters()">Reset</button>
-      <div class="divider"></div>
-      <button class="srt on" id="s-score" onclick="setSort('score')">Priority<span class="srt-arrow" id="arr-score"> ▼</span></button>
-      <button class="srt"    id="s-due"   onclick="setSort('due')">Due<span class="srt-arrow" id="arr-due"></span></button>
       <span class="fcnt" id="fcnt"></span>
     </div>
   </div>
@@ -546,14 +589,32 @@ select.fi { appearance:none; -webkit-appearance:none; cursor:pointer; padding-ri
           <input type="hidden" id="f-effort" value="3">
         </div>
       </div>
-      <div class="sp lo" id="sp">
+      <div class="sp p4" id="sp">
         <div><div class="sp-lbl">Priority score</div><div class="sp-note" id="sp-note">—</div></div>
-        <div style="text-align:right"><div class="sp-num" id="sp-num">—</div><div class="sp-den">/ 100</div></div>
+        <div style="text-align:right"><div class="sp-num" id="sp-num">—</div></div>
       </div>
-      <div class="fg"><label class="flbl">Due date</label><input class="fi" type="date" id="f-due"/></div>
+      <div class="fg"><label class="flbl">Due date</label>
+        <input type="hidden" id="f-due" value="">
+        <button type="button" class="fi datebtn" id="due-btn" onclick="openCal()" aria-haspopup="dialog" aria-expanded="false">
+          <span id="due-txt" class="ph">No date</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+        </button>
+        <div class="cal" id="cal" hidden>
+          <div class="cal-hd">
+            <button type="button" class="ico-btn" onclick="calMove(-1)" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+            <div class="cal-title" id="cal-title"></div>
+            <button type="button" class="ico-btn" onclick="calMove(1)" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="cal-grid cal-dow"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+          <div class="cal-grid" id="cal-days"></div>
+          <div class="cal-ft">
+            <button type="button" class="btn r" onclick="calPick('')" style="padding:8px 12px">Clear</button>
+            <button type="button" class="btn" onclick="calPick(today())" style="padding:8px 14px">Today</button>
+          </div>
+        </div></div>
     </div>
     <div class="m-foot">
-      <button class="btn g" id="m-cancel" style="display:none;margin-right:auto">✓ Complete</button>
+      <button class="btn g" id="m-cancel" style="display:none;margin-right:auto">Complete</button>
       <button class="btn" id="m-close">Cancel</button>
       <button class="btn dk" id="m-save">Add Task</button>
     </div>
@@ -682,11 +743,16 @@ const CFG = {
       // (0.35 + 0.25 + 0.25 + 0.15 = 1.0)
     },
     thresholds: {
-      high: 70,                   // Score ≥ 70   → "High priority" / green badge
-      mid:  41,                   // Score 41-69  → "Moderate priority" / yellow badge
-                                  // Score ≤ 40   → "Low priority" / gray badge
+      p1: 80,                     // Score ≥ 80   → P1 "High priority"    / red
+      p2: 60,                     // Score 60-79  → P2 "Medium priority"  / orange
+      p3: 40,                     // Score 40-59  → P3 "Low priority"     / blue
+                                  // Score < 40   → P4 "Lowest priority"  / gray
     },
     scale: 20,                    // Multiply normalized score by this (20 → max 100)
+    dueBoost: {                   // Added to the score of open tasks, then capped at 100
+      today:   10,                // due today
+      overdue: 15,                // due before today
+    },
   },
 };
 
@@ -806,15 +872,23 @@ function cycleTheme() {
 function calcScore(t) {
   const w = CFG.score.weights;
   const raw = (t.urgency * w.urgency) + (t.risk * w.risk) + (t.impact * w.impact) + ((w.effortBase - t.effort) * w.effort);
-  return Math.round(raw * CFG.score.scale);
+  let score = Math.round(raw * CFG.score.scale);
+  if (t.dueDate && !t.done) {
+    const td = today(), b = CFG.score.dueBoost;
+    score += t.dueDate < td ? b.overdue : t.dueDate === td ? b.today : 0;
+  }
+  return Math.min(100, score);
+}
+// Scores are derived, so refresh them on every paint: weights, thresholds and
+// the passing of days (a task turning overdue) then never leave stale numbers.
+function rescore() { tasks.forEach(t => { const n = calcScore(t); if (t.score !== n) t.score = n; }); }
+// Four Todoist-style levels, returned as 'p1'..'p4' (also the CSS class names).
+function scoreCls(s) {
+  const t = CFG.score.thresholds;
+  return s >= t.p1 ? 'p1' : s >= t.p2 ? 'p2' : s >= t.p3 ? 'p3' : 'p4';
 }
 function scoreLbl(s) {
-  const { high, mid } = CFG.score.thresholds;
-  return s >= high ? 'High priority' : s >= mid ? 'Moderate priority' : 'Low priority';
-}
-function scoreCls(s) {
-  const { high, mid } = CFG.score.thresholds;
-  return s >= high ? 'hi' : s >= mid ? 'md' : 'lo';
+  return { p1: 'High priority', p2: 'Medium priority', p3: 'Low priority', p4: 'Lowest priority' }[scoreCls(s)];
 }
 /* ══════════════════════════════════════════════════════════
    STATE  (runtime only — not for editing)
@@ -852,6 +926,7 @@ function syncProjectSelects() {
   if (projects.some(p => p.name === fv)) fc.value = fv;
 }
 // Filter / sort state
+let searchQ = '';
 let catF = 'All', statusF = 'All', sortBy = 'score', sortDir = 1; // sortDir: 1 = default direction for this sort, -1 = inverted
 const SORT_DEFAULT_DESC = { score: true, name: false, due: false }; // whether dir=1 means descending for each sort key
 // UI state
@@ -895,6 +970,7 @@ function load() {
 function seed() { tasks = SEED.map(t => ({ ...t, score: calcScore(t) })); }
 function paint() {
   ensureProjects();
+  rescore();
   syncProjectSelects();
   renderToday();
   if (curView === 'backlog') renderBacklog();
@@ -929,7 +1005,8 @@ function setOfflineBadge(offline) {
    UTILITIES
    ══════════════════════════════════════════════════════════ */
 function esc(s)    { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function today()   { return new Date().toISOString().split('T')[0]; }
+function ymd(d)    { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function today()   { return ymd(new Date()); }
 function todayLong() {
   return new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
@@ -968,7 +1045,7 @@ function render() {
 /* ══════════════════════════════════════════════════════════
    RENDER — shared pieces (icons, priority, row builder)
    Priority color comes from the task score: High → P1 red,
-   Moderate → P2 orange, Low → P3 neutral.
+   Medium → P2 orange, Low → P3 blue, Lowest → P4 grey.
    ══════════════════════════════════════════════════════════ */
 const svg = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
 const IC = {
@@ -980,11 +1057,12 @@ const IC = {
   cal:    svg('<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
   flag:   svg('<path d="M5 21V4"/><path d="M5 4h12l-2.5 4.5L17 13H5"/>'),
   bolt:   svg('<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>'),
+  search: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/>'),
   inbox:  svg('<path d="M3 13.5 6 5h12l3 8.5"/><path d="M3 13.5V19a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-5.5h-5.5a3.5 3.5 0 0 1-7 0H3Z"/>'),
   cal2:   svg('<rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 2.8v3.4M16 2.8v3.4"/><path d="m9 15 2.2 2.2L15.5 13"/>'),
 };
-function pcls(s) { return { hi: 'p1', md: 'p2', lo: 'p3' }[scoreCls(s)]; }
-function addDays(n) { return new Date(Date.now() + n * 864e5).toISOString().split('T')[0]; }
+const pcls = scoreCls;
+function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return ymd(d); }
 function dueInfo(t) {
   if (!t.dueDate) return null;
   if (t.done) return { cls: '', txt: fdate(t.dueDate) };
@@ -1009,8 +1087,8 @@ function taskRow(t, ctx) {
     `<span class="meta score ${scoreCls(t.score)}">${IC.bolt}${t.score}</span>`,
     due ? `<span class="meta ${due.cls}">${IC.cal}${due.txt}</span>` : '',
     ctx === 'backlog' && onT ? `<span class="meta soon"><span class="in-active-dot"></span>In Active</span>` : '',
-    riskMeta(t),
-    `<span class="meta proj">${esc(t.category)} <span class="hash" style="color:${projColor(t.category)}">#</span></span>`,
+    ...(ctx === 'active' ? [] : [riskMeta(t),
+    `<span class="meta proj"><span>${hl(t.category)}</span> <span class="hash" style="color:${projColor(t.category)}">#</span></span>`]),
   ].join('');
   let acts = '';
   if (ctx === 'active') {
@@ -1027,7 +1105,7 @@ function taskRow(t, ctx) {
   <div class="task${t.done ? ' done' : ''}" data-id="${t.id}" onclick="openEdit(${t.id})">
     ${checkBtn(t)}
     <div class="task-main">
-      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-title">${hl(t.title)}</div>
       <div class="task-meta">${meta}</div>
     </div>
     <div class="task-acts">${acts}</div>
@@ -1074,10 +1152,8 @@ function heroCard(t) {
       <div class="focus-hd-title">${esc(t.title)}</div>
     </div>
     <div class="focus-chips">
-      <span class="chip ${scoreCls(t.score)}">${IC.bolt}${t.score} · ${scoreLbl(t.score)}</span>
+      <span class="chip ${scoreCls(t.score)}">${IC.bolt}${t.score}</span>
       ${due ? `<span class="chip ${due.cls}">${IC.cal}${due.txt}</span>` : ''}
-      ${t.risk >= RISK.mid ? `<span class="chip risk">${IC.flag}${t.risk >= RISK.high ? 'High' : 'Med'} risk</span>` : ''}
-      <span class="chip"><i class="pdot" style="background:${projColor(t.category)}"></i>${esc(t.category)}</span>
     </div>
     <div class="focus-btns">
       <button class="btn dk" onclick="event.stopPropagation();tick(${t.id},this.closest('.focus-card').querySelector('.chk'))">${IC.check}Complete</button>
@@ -1119,9 +1195,23 @@ function updateBadge() {
 /* ══════════════════════════════════════════════════════════
    RENDER — ALL TASKS
    ══════════════════════════════════════════════════════════ */
+// Search: every word typed must appear in the task title or its project name.
+function matchesQ(t) {
+  if (!searchQ) return true;
+  const hay = (t.title + ' ' + t.category).toLowerCase();
+  return searchQ.toLowerCase().split(/\s+/).filter(Boolean).every(w => hay.includes(w));
+}
+// Escape text and wrap the searched words in <mark>.
+function hl(text) {
+  const words = searchQ.trim().split(/\s+/).filter(Boolean).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (!words.length) return esc(text);
+  return String(text).split(new RegExp('(' + words.join('|') + ')', 'ig'))
+    .map((part, i) => i % 2 ? `<mark class="hit">${esc(part)}</mark>` : esc(part)).join('');
+}
 function renderBacklog() {
   // Apply filters
   let all = tasks.filter(t => {
+    if (!matchesQ(t)) return false;
     if (catF !== 'All' && t.category !== catF) return false;
     if (statusF === 'Active') return !t.done;
     if (statusF === 'Done')   return t.done;
@@ -1140,9 +1230,11 @@ function renderBacklog() {
   const done   = all.filter(t => t.done)
     .sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0));
 
-  const fcntN = statusF === 'All' ? active.length : all.length;
+  // While searching, completed matches are listed too (under "Completed").
+  const showDone = statusF === 'Done' || (searchQ && statusF === 'All');
+  const fcntN = statusF === 'All' && !searchQ ? active.length : all.length;
   const overdue = active.filter(t => t.dueDate && t.dueDate < today()).length;
-  const label = `${fcntN} task${fcntN !== 1 ? 's' : ''}`;
+  const label = searchQ ? `${fcntN} result${fcntN !== 1 ? 's' : ''}` : `${fcntN} task${fcntN !== 1 ? 's' : ''}`;
   document.getElementById('fcnt').textContent = label;
   document.getElementById('b-sub').innerHTML = `${IC.inbox}<span>${label}${overdue ? ` · <span style="color:var(--due-late)">${overdue} overdue</span>` : ''}</span>`;
 
@@ -1151,18 +1243,24 @@ function renderBacklog() {
   if (statusF === 'Done') {
     aEl.innerHTML = '';
   } else if (!active.length) {
-    aEl.innerHTML = emptyState(IC.cal2, 'All clear', 'No tasks match these filters. Tap + to capture a new one.');
+    aEl.innerHTML = (searchQ && done.length && showDone) ? ''
+      : searchQ ? emptyState(IC.search, 'No matches', `Nothing found for “${esc(searchQ.trim())}”. Try fewer words, or reset the filters.`)
+      : emptyState(IC.cal2, 'All clear', 'No tasks match these filters. Tap + to capture a new one.');
   } else {
     aEl.innerHTML = active.map(t => taskRow(t, 'backlog')).join('');
   }
 
-  // Done section — only shown when explicitly filtering Status = Done
+  // Done section — shown when filtering Status = Done, or alongside search results
   const dEl = document.getElementById('bl-dn');
-  if (statusF !== 'Done') { dEl.innerHTML = ''; return; }
-  if (!done.length) { dEl.innerHTML = emptyState(IC.check, 'Nothing completed yet', 'Finished tasks will show up here.'); return; }
+  if (!showDone) { dEl.innerHTML = ''; return; }
+  if (!done.length) {
+    dEl.innerHTML = searchQ ? (active.length ? '' : emptyState(IC.search, 'No matches', `Nothing found for “${esc(searchQ.trim())}”. Try fewer words, or reset the filters.`))
+                            : emptyState(IC.check, 'Nothing completed yet', 'Finished tasks will show up here.');
+    return;
+  }
   dEl.innerHTML = `
     <div class="sec"><span class="sec-lbl">Completed</span><span class="sec-cnt">${done.length}</span>
-      <button class="sec-act" onclick="deleteAllDone()" style="color:var(--p1)">Delete all</button></div>
+      ${statusF === 'Done' && !searchQ ? `<button class="sec-act" onclick="deleteAllDone()" style="color:var(--p1)">Delete all</button>` : ''}</div>
     ${done.map(t => taskRow(t, 'backlog')).join('')}`;
 }
 
@@ -1252,8 +1350,19 @@ function updateSortUI() {
     arr.textContent = isDesc ? ' ▼' : ' ▲';
   });
 }
+function setSearch(v) {
+  searchQ = v;
+  const q = document.getElementById('q'); if (q.value !== v) q.value = v;
+  document.getElementById('q-x').hidden = !v;
+}
+document.getElementById('q').addEventListener('input', e => { setSearch(e.target.value); renderBacklog(); });
+document.getElementById('q').addEventListener('keydown', e => {
+  if (e.key === 'Escape') { setSearch(''); renderBacklog(); }
+  if (e.key === 'Enter') e.target.blur();   // dismiss the phone keyboard
+});
+document.getElementById('q-x').addEventListener('click', () => { setSearch(''); renderBacklog(); document.getElementById('q').focus(); });
 function resetFilters() {
-  catF = 'All'; statusF = 'All'; sortBy = 'score'; sortDir = 1;
+  catF = 'All'; statusF = 'All'; sortBy = 'score'; sortDir = 1; setSearch('');
   document.getElementById('sel-cat').value = 'All';
   document.getElementById('sel-status').value = 'All';
   updateSortUI();
@@ -1278,7 +1387,7 @@ function openEdit(id) {
   eid = id;
   const t = tasks.find(x => x.id === id); if (!t) return;
   txt('m-ey', 'Edit Task'); txt('m-t', 'Edit task');
-  document.getElementById('m-save').textContent = 'Save Changes';
+  document.getElementById('m-save').textContent = 'Save';
   document.getElementById('m-delete').style.display = '';
   document.getElementById('m-cancel').style.display = t.done ? 'none' : '';
   gf('task', t.title); gf('cat', t.category);
@@ -1326,7 +1435,7 @@ function closeModal() { document.getElementById('ov').classList.remove('on'); un
 
 // DOM helpers for modal
 function txt(id, v) { const e = document.getElementById(id);       if (e) e.textContent = v; }
-function gf(id, v)  { const e = document.getElementById('f-' + id); if (e) e.value = v; }
+function gf(id, v)  { const e = document.getElementById('f-' + id); if (e) e.value = v; if (id === 'due') { showDue(); closeCal(); } }
 function sr(k, v)   {
   gf(k, v);
   document.querySelectorAll('#grp-' + k + ' .rate-btn').forEach(b => b.classList.toggle('on', +b.dataset.v === +v));
@@ -1344,6 +1453,7 @@ function up() {
     urgency: +document.getElementById('f-urgency').value,
     effort:  +document.getElementById('f-effort').value,
     risk:    +document.getElementById('f-risk').value,
+    dueDate: document.getElementById('f-due').value,
   });
   document.getElementById('sp-num').textContent  = s;
   document.getElementById('sp-note').textContent = scoreLbl(s);
@@ -1386,6 +1496,49 @@ document.getElementById('m-delete').addEventListener('click', () => {
 });
 document.getElementById('ov').addEventListener('click', e => { if (e.target === document.getElementById('ov')) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeProjects(); closeModal(); closePromo(); } });
+
+/* ══════════════════════════════════════════════════════════
+   DUE-DATE CALENDAR  (custom, so today can carry a red ring —
+   a native date picker can't be styled that way). Tapping the
+   date field always opens it; #f-due holds the yyyy-mm-dd value.
+   ══════════════════════════════════════════════════════════ */
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+let calY = 0, calM = 0;
+function showDue() {
+  const v = document.getElementById('f-due').value, el = document.getElementById('due-txt');
+  if (!v) { el.textContent = 'No date'; el.className = 'ph'; return; }
+  const [y, m, d] = v.split('-').map(Number);
+  el.className = '';
+  el.textContent = new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+function openCal() {
+  const v = document.getElementById('f-due').value || today();
+  const [y, m] = v.split('-').map(Number);
+  calY = y; calM = m - 1;
+  renderCal();
+  document.getElementById('cal').hidden = false;
+  document.getElementById('due-btn').setAttribute('aria-expanded', 'true');
+  document.getElementById('cal').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function closeCal() {
+  document.getElementById('cal').hidden = true;
+  document.getElementById('due-btn').setAttribute('aria-expanded', 'false');
+}
+function calMove(n) { const d = new Date(calY, calM + n, 1); calY = d.getFullYear(); calM = d.getMonth(); renderCal(); }
+function calPick(v) { document.getElementById('f-due').value = v; showDue(); closeCal(); up(); }
+function renderCal() {
+  document.getElementById('cal-title').textContent = `${MONTHS[calM]} ${calY}`;
+  const sel = document.getElementById('f-due').value, td = today();
+  const lead = (new Date(calY, calM, 1).getDay() + 6) % 7;            // Monday-first
+  const days = new Date(calY, calM + 1, 0).getDate();
+  const cells = Math.ceil((lead + days) / 7) * 7;
+  let html = '';
+  for (let i = 0; i < cells; i++) {
+    const d = new Date(calY, calM, 1 - lead + i), v = ymd(d);
+    html += `<button type="button" class="cal-day${d.getMonth() !== calM ? ' out' : ''}${v === td ? ' today' : ''}${v === sel ? ' picked' : ''}" onclick="calPick('${v}')" aria-label="${d.toDateString()}">${d.getDate()}</button>`;
+  }
+  document.getElementById('cal-days').innerHTML = html;
+}
 
 /* ══════════════════════════════════════════════════════════
    PROJECTS — add / edit / delete sheet
@@ -1556,6 +1709,7 @@ window.addEventListener('resize', syncNavHeight);
 window.addEventListener('orientationchange', syncNavHeight);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncNavHeight).catch(() => {});
 
+document.addEventListener('visibilitychange', () => { if (!document.hidden) paint(); });
 applyTheme();          // confirm/refine the theme the early <head> script already applied
 refreshSunTimes();     // resolve real sunset once (async — no-op unless mode is 'auto')
 setInterval(() => { applyTheme(); if (themeMode === 'auto') refreshSunTimes(); }, 15 * 60 * 1000); // catch the actual sunset/sunrise moment, and day rollover, while the tab stays open
